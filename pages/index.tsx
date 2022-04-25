@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import { ChangeEvent, useEffect, useState } from 'react'
+import {Websocket} from 'websocket-ts'
 import configJson from '../config/2022/config.json'
 import {
   Config,
@@ -35,6 +36,23 @@ export default function Home() {
       setFormData(getDefaultConfig())
     }
   }, [])
+
+  function sendData() {
+    const data = { ...formData }
+    let dMap = new Map<string, any>()
+    let dJSON = {}
+ 
+    data.sections
+      .map((s) => s.fields)
+      .flat()
+      .forEach((f) => {
+        console.log(`Adding ${f.title}: ${f.value} to JSON`)
+        dMap.set(f.title, f.value)
+      })
+    dJSON = Object.fromEntries(dMap)
+    let ws: Websocket;
+    
+  }
 
   function updateValue(sectionName: string, code: string, data: any) {
     const currentData = { ...formData }
@@ -165,7 +183,7 @@ export default function Home() {
                 onClick={() => setShowQR(true)}
                 disabled={getMissingRequiredFields().length > 0}
               >
-                Commit
+                Send
               </button>
               <button
                 className="focus:shadow-outline mx-2 my-6 rounded border border-red-400 bg-white py-2 font-bold text-red-400 hover:bg-red-200 focus:outline-none"
