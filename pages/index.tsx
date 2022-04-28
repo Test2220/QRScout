@@ -1,6 +1,5 @@
 import Head from 'next/head'
 import { ChangeEvent, useEffect, useState } from 'react'
-import {Websocket} from 'websocket-ts'
 import configJson from '../config/2022/config.json'
 import {
   Config,
@@ -10,6 +9,7 @@ import {
 import QRModal from '../components/QRModal'
 import Section from '../components/Section'
 import Button, { Variant } from '../components/core/Button'
+import {Websocket} from "websocket-ts";
 
 function buildConfig(c: Config) {
   let config: Config = { ...c }
@@ -50,8 +50,8 @@ export default function Home() {
         dMap.set(f.title, f.value)
       })
     dJSON = Object.fromEntries(dMap)
-    let ws: Websocket;
-    
+    let ws = new Websocket("localhost:2220")
+    ws.send(dJSON.toString())
   }
 
   function updateValue(sectionName: string, code: string, data: any) {
